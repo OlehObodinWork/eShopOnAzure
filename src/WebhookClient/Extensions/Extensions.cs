@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 
 namespace eShop.WebhookClient.Extensions;

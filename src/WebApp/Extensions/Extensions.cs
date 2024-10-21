@@ -31,6 +31,7 @@ public static class Extensions
         // Application services
         builder.Services.AddScoped<BasketState>();
         builder.Services.AddScoped<LogOutService>();
+        builder.Services.AddSingleton<ThemeState>();
         builder.Services.AddSingleton<BasketService>();
         builder.Services.AddSingleton<OrderStatusNotificationService>();
         builder.Services.AddSingleton<IProductImageUrlProvider, ProductImageUrlProvider>();
@@ -67,6 +68,7 @@ public static class Extensions
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
         // Add Authentication services
+      
         services.AddAuthorization();
         services.AddAuthentication(options =>
         {
@@ -74,7 +76,6 @@ public static class Extensions
             options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
         })
         .AddMicrosoftIdentityWebApp(builder.Configuration);
-
         // Blazor auth services
         services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
         services.AddCascadingAuthenticationState();

@@ -491,3 +491,16 @@ $RECYCLE.BIN/
 /playwright/.auth/
 /user.json
 .azure
+
+
+# Settings
+src/Basket.API/appsettings.json
+src/Ordering.API/appsettings.json
+src/WebApp/appsettings.json
+src/Catalog.API/appsettings.json
+src/WebhookClient/Properties/launchSettings.json
+src/WebhookClient/appsettings.json
+src/Webhooks.API/appsettings.json
+src/eShop.AppHost/appsettings.json
+src/eShop.AppHost/Properties/launchSettings.json
+/src/eShop.AppHost/VolumeMount.AppHost-postgres-data

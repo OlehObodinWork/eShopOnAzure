@@ -1,5 +1,7 @@
 ﻿using eShop.WebApp.Components;
 using eShop.ServiceDefaults;
+using Microsoft.FluentUI.AspNetCore.Components;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,8 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.AddApplicationServices();
+
+builder.Services.AddFluentUIComponents();
 
 var app = builder.Build();
 
@@ -22,6 +26,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseAntiforgery();
+
+app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

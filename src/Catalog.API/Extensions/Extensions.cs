@@ -14,8 +14,13 @@ public static class Extensions
             });
         });
 
+        // REVIEW: microservice antipattern
+        builder.AddCJAuth();
+
+
+
         // REVIEW: This is done for development ease but shouldn't be here in production
-        builder.Services.AddMigration<CatalogContext, CatalogContextSeed>();
+        //builder.Services.AddMigration<CatalogContext, CatalogContextSeed>();
 
         // Add the integration services that consume the DbContext
         builder.Services.AddTransient<IIntegrationEventLogService, IntegrationEventLogService<CatalogContext>>();
@@ -41,5 +46,6 @@ public static class Extensions
         }
 
         builder.Services.AddSingleton<ICatalogAI, CatalogAI>();
+        builder.Services.AddSingleton<CJCatalog>();
     }
 }

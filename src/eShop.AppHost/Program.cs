@@ -7,6 +7,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddForwardedHeaders();
 
+
+
 var appInsights = builder.ExecutionContext.IsPublishMode
     ? builder.AddAzureApplicationInsights("appInsights")
     : builder.AddConnectionString("appInsights", "APPLICATIONINSIGHTS_CONNECTION_STRING");
@@ -17,9 +19,14 @@ var serviceBus = builder.ExecutionContext.IsPublishMode
     ? builder.AddAzureServiceBus("eventBus").AddTopic("eshop_event_bus")
     : builder.AddConnectionString("eventBus");
 
-var postgres = builder.AddPostgres("postgres")
+var username = builder.AddParameter("dbuser", secret: true);
+var password = builder.AddParameter("dbPassword", secret: true);
+
+var postgres = builder.AddPostgres("postgres", username, password)
     .WithImage("ankane/pgvector")
-    .WithImageTag("latest");
+    .WithImageTag("latest")
+    .WithBindMount("VolumeMount.AppHost-postgres-data", "/var/lib/postgresql/data");
+
 
 var catalogDb = postgres.AddDatabase("catalogdb");
 var identityDb = postgres.AddDatabase("identitydb");
@@ -79,6 +86,8 @@ var webApp = builder.AddProject<Projects.WebApp>("webapp", launchProfileName)
     .WithReference(serviceBus)
     .WithReference(appInsights);
 
+
+
 // set to true if you want to use OpenAI
 bool useOpenAI = false;
 if (useOpenAI)
@@ -132,7 +141,6 @@ static bool ShouldUseHttpForEndpoints()
 {
     const string EnvVarName = "ESHOP_USE_HTTP_ENDPOINTS";
     var envValue = Environment.GetEnvironmentVariable(EnvVarName);
-
     // Attempt to parse the environment variable value; return true if it's exactly "1".
     return int.TryParse(envValue, out int result) && result == 1;
 }

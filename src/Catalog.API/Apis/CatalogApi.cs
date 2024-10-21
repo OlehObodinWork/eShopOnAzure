@@ -7,7 +7,7 @@ public static class CatalogApi
 {
     public static IEndpointRouteBuilder MapCatalogApiV1(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("api/catalog").HasApiVersion(1.0);
+        var api = app.MapGroup("api/catalog").HasApiVersion(1.1);
 
         // Routes for querying catalog items.
         api.MapGet("/items", GetAllItems);
@@ -22,13 +22,15 @@ public static class CatalogApi
         // Routes for resolving catalog items by type and brand.
         api.MapGet("/items/type/{typeId}/brand/{brandId?}", GetItemsByBrandAndTypeId);
         api.MapGet("/items/type/all/brand/{brandId:int?}", GetItemsByBrandId);
-        api.MapGet("/catalogtypes", async (CatalogContext context) => await context.CatalogTypes.OrderBy(x => x.Type).ToListAsync());
-        api.MapGet("/catalogbrands", async (CatalogContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync());
+        //api.MapGet("/catalogtypes", async (CatalogContext context) => await context.CatalogTypes.OrderBy(x => x.Type).ToListAsync());
+        //api.MapGet("/catalogbrands", async (CatalogContext context) => await context.CatalogBrands.OrderBy(x => x.Brand).ToListAsync());
 
         // Routes for modifying catalog items.
         api.MapPut("/items", UpdateItem);
         api.MapPost("/items", CreateItem);
         api.MapDelete("/items/{id:int}", DeleteItemById);
+
+        api.MapPost("items/sync", SyncItem);
 
         return app;
     }
@@ -69,7 +71,7 @@ public static class CatalogApi
             return TypedResults.BadRequest("Id is not valid.");
         }
 
-        var item = await services.Context.CatalogItems.Include(ci => ci.CatalogBrand).SingleOrDefaultAsync(ci => ci.Id == id);
+        var item = await services.Context.CatalogItems.SingleOrDefaultAsync(ci => ci.Id == id);
 
         if (item == null)
         {
@@ -279,6 +281,80 @@ public static class CatalogApi
 
         return TypedResults.Created($"/api/catalog/items/{item.Id}");
     }
+
+    public static async Task<Results<Created, Ok>> SyncItem([AsParameters] CatalogServices services, string SKU)
+    {
+        var url = $"https://developers.cjdropshipping.com/api2.0/v1/product/query?productSku={SKU}";
+
+        var token = "";
+        if (services.TokenService.token != null)
+        {
+            token = services.TokenService.token;
+        }
+        else
+        {
+            token = await services.TokenService.GetTokenAsync();
+        }
+
+        services.Logger.LogInformation(token);
+
+        var result = await services.Utils.GetCatalogItemAsync(services.HttpClient, url, services.Logger, token);
+        var item = services.Context.CatalogItems.SingleOrDefault(x => x.ProductSKU == SKU);
+
+        //Type type = result.Item.GetType();
+        //PropertyInfo[] properties = type.GetProperties();
+
+        //foreach (var property in properties)
+        //{
+        //    var value = property.GetValue(result.Item);
+        //    services.Logger.LogInformation("{PropertyName}: {PropertyValue}", property.Name, value);
+        //}
+
+        if (item != default && item.ListedNum != result.Item.ListedNum)
+        {
+            item.ListedNum = result.Item.ListedNum;
+            await services.Context.SaveChangesAsync();
+            return TypedResults.Ok();
+        }
+        if (item == default)
+        {
+            foreach (var variant in result.Variants)
+            {
+                variant.CatalogItemId = result.Item.Id;
+                result.Item.CatalogItemVariants.Add(variant);
+                services.Context.CatalogItemVariants.Add(variant);
+            }
+
+            foreach (var image in result.Images)
+            {
+                image.CatalogItemId = result.Item.Id;
+                result.Item.OriginalImages.Add(image);
+                services.Context.OriginalImages.Add(image);
+            }
+
+
+            // var item = new CatalogItem
+            //{
+            //    Id = product.Id,
+            //    CatalogBrandId = product.CatalogBrandId,
+            //    CatalogTypeId = product.CatalogTypeId,
+            //    Description = product.Description,
+            //    Name = product.Name,
+            //    PictureFileName = product.PictureFileName,
+            //    Price = product.Price,
+            //    AvailableStock = product.AvailableStock,
+            //    RestockThreshold = product.RestockThreshold,
+            //    MaxStockThreshold = product.MaxStockThreshold
+            //};
+            //item.Embedding = await services.CatalogAI.GetEmbeddingAsync(item);
+
+            services.Context.CatalogItems.Add(result.Item);
+            await services.Context.SaveChangesAsync();
+            return TypedResults.Created($"/api/catalog/items/something");
+        }
+        return TypedResults.Ok();
+    }
+
 
     public static async Task<Results<NoContent, NotFound>> DeleteItemById(
         [AsParameters] CatalogServices services,

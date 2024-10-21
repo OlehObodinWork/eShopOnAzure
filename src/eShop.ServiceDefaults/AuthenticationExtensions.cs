@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Security.Cryptography.Xml;
+using Azure.Core.Diagnostics;
+using Azure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +18,13 @@ public static class AuthenticationExtensions
         var configuration = builder.Configuration;
 
         var azureADSection = configuration.GetSection("AzureAD");
+
+
+
+        //foreach (var keyValuePair in azureADSection.GetChildren())
+        //{
+        //    Console.WriteLine($"{keyValuePair.Key}: {keyValuePair.Value}");
+        //}
 
         if (!azureADSection.Exists())
         {
