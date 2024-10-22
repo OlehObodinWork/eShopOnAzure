@@ -12,7 +12,7 @@
         elpin.classList.add("dark");
         document.body.classList.add("dark");
       /*  document.getElementById("overscroll").style.background = gradientDark;*/
-        img.src = "images/dark_bg_logo-removebg-preview.png";
+        img.src = "images/logofordark.png";
 
     } else {
         el.style.background = gradientLight;
@@ -21,7 +21,7 @@
         document.body.classList.remove("dark");
         /*  document.getElementById("overscroll").style.background = gradientLight;*/
         
-        img.src = "images/white_bg_logo-removebg-preview.png";
+        img.src = "images/logoforlight.png";
         console.log(img);
     }
    

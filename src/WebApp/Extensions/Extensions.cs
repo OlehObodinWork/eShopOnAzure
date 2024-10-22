@@ -68,14 +68,16 @@ public static class Extensions
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
         // Add Authentication services
-      
-        services.AddAuthorization();
+
+       
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
         })
         .AddMicrosoftIdentityWebApp(builder.Configuration);
+
+
         // Blazor auth services
         services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
         services.AddCascadingAuthenticationState();
