@@ -6,23 +6,29 @@
     const el = document.querySelector(".backgradient");
     const elpin = document.querySelector(".backgradient-pin");
     if (isDarkMode) {
-     
-        el.style.background = gradientDark;
-        el.classList.add("dark");
-        elpin.classList.add("dark");
-        document.body.classList.add("dark");
-      /*  document.getElementById("overscroll").style.background = gradientDark;*/
-        img.src = "images/logofordark.png";
+
+        if (el) {
+            el.style.background = gradientDark;
+            el.classList.add("dark");
+            elpin.classList.add("dark");
+            document.body.classList.add("dark");
+            /*  document.getElementById("overscroll").style.background = gradientDark;*/
+            img.src = "images/logofordark.png";
+        }
+
 
     } else {
-        el.style.background = gradientLight;
-        el.classList.remove("dark");
-        elpin.classList.remove("dark");
-        document.body.classList.remove("dark");
-        /*  document.getElementById("overscroll").style.background = gradientLight;*/
-        
-        img.src = "images/logoforlight.png";
-        console.log(img);
+
+        if (el) {
+            el.style.background = gradientLight;
+            el.classList.remove("dark");
+            elpin.classList.remove("dark");
+            document.body.classList.remove("dark");
+            /*  document.getElementById("overscroll").style.background = gradientLight;*/
+
+            img.src = "images/logoforlight.png";
+        }
+       
     }
    
 }

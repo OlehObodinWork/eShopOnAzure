@@ -124,14 +124,6 @@
         margin: 0;
     }
 
-.eshop-header .logo-header {
-    color: black;
-    margin-right: auto;
-    width: 10vw;
-    height: auto;
-    max-width: 250px;
-    min-width: 100px;
-}
 
 .eshop-header-navbar {
     display: flex;

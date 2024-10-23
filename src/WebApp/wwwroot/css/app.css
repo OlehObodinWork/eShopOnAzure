@@ -395,3 +395,14 @@ h1:focus {
 .custom-button {
     border-bottom: 5px solid black;
 }
+
+
+
+.logo-header {
+    color: black;
+    margin-right: auto;
+    width: 13vw;
+    height: auto;
+    max-width: 250px;
+    min-width: 100px;
+}
