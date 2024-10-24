@@ -12,6 +12,8 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.AddApplicationServices();
 
 builder.Services.AddFluentUIComponents();
+builder.Services.AddDataGridEntityFrameworkAdapter();
+
 
 var app = builder.Build();
 

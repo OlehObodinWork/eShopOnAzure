@@ -9,6 +9,10 @@
 
         public string TitleDE { get; set; }
 
+        public string ValueEN { get; set; }
+
+        public string ValueDE { get; set; }
+
         public List<CatalogItem> CatalogItems { get; set; }
     }
 }

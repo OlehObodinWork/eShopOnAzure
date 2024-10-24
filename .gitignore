@@ -504,3 +504,4 @@ src/Webhooks.API/appsettings.json
 src/eShop.AppHost/appsettings.json
 src/eShop.AppHost/Properties/launchSettings.json
 /src/eShop.AppHost/VolumeMount.AppHost-postgres-data
+certificate.crt

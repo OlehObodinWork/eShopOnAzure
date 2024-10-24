@@ -27,26 +27,18 @@
                 <a class="logo logo-header" href="/admin">
 
                     <img id="logo" alt="Lazy Loading" src="images/logoforlight.png" class="logo logo-header" />
-
+                        
                 </a>
             }
-                <FluentMenuButton @ref=menubuttonm Text="Select brand color" OnMenuChanged="HandleOnMenuChanged">
-                    <FluentMenuItem Id="AddProduct">Add Product</FluentMenuItem>
+                <FluentMenuButton @ref=menubuttonm Text="+ Add New" IconStart="null" OnMenuChanged="HandleOnMenuChanged">
+                    <FluentMenuItem Id="AddProduct"> Product</FluentMenuItem>
                 </FluentMenuButton>
             </FluentNavMenu>
         
 
       
             <FluentBodyContent>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis lorem lacus.
-                Ut id leo non enim feugiat ultrices. Proin vulputate volutpat urna nec iaculis.
-                Integer dui lacus, fermentum sit amet aliquet in, scelerisque vitae dui.
-                Nulla fringilla sagittis orci eu consectetur. Fusce eget dolor non lectus placerat
-                tincidunt. Pellentesque aliquam non odio ac porttitor. Nam finibus mattis sagittis.
-                Ut hendrerit porttitor massa in aliquam. Duis laoreet fringilla feugiat.
-                Sed maximus, urna in fringilla posuere, enim urna bibendum justo, vel molestie nibh orci nec lectus.
-                Etiam a varius justo. Aenean nisl ante, interdum eget vulputate eget, iaculis ut massa.
-                Suspendisse maximus sed purus id molestie. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                <ProducTable> </ProducTable>
             </FluentBodyContent>
         
     </FluentStack>
@@ -91,16 +83,9 @@
         IDialogReference dialog = await DialogService.ShowDialogAsync<AddProductDialog>(parameters);
         DialogResult? result = await dialog.Result;
 
-
-        if (result.Data is not null)
-        {
-            SimplePerson? simplePerson = result.Data as SimplePerson;
-            Console.WriteLine($"Dialog closed by {simplePerson?.Firstname} {simplePerson?.Lastname} ({simplePerson?.Age}) - Canceled: {result.Cancelled}");
-        }
-        else
-        {
-            Console.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
-        }
+        
+        Console.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
+        
     }
   
 }
